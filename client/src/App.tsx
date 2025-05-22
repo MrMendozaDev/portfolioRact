@@ -9,7 +9,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <React.StrictMode>
-          <FaceDetection />
+          <FaceDetection msg={'Props'} />
         </React.StrictMode>
       </header>
     </div>
