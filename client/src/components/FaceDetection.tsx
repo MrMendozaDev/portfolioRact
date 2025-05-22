@@ -133,7 +133,7 @@ export default function FaceDetectionComponent() {
 
   return (
     <section id="demos">
-      <h2>Demo: Webcam continuous face detection</h2>
+      <h2>Demo: Webcam continuous face detection--s</h2>
       <div id="liveView" className={styles.videoView} ref={liveViewRef}>
         <button onClick={enableCam}>ENABLE WEBCAM</button>
         <button onClick={captureFace}>Capture Image</button>
