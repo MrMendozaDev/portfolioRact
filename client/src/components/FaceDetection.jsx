@@ -182,7 +182,7 @@ const MediaPipeFace = ({ msg }) => {
 
   return (
     <div>
-      <video ref={videoRef} autoPlay playsInline muted width="640" height="480" />
+      <video ref={videoRef} autoPlay width="640" height="480" />
       <canvas ref={canvasRef} />
       <canvas ref={pictureRef} style={{ display: 'none' }} />
       <button onClick={initializeFaceDetector}>Iniciar Detector</button>
