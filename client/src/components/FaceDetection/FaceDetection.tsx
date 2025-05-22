@@ -1,26 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, FC } from 'react';
+import { typeFaceDetector } from './types/faceDetector';
 import {
   FaceDetector,
   FaceLandmarker,
-  FilesetResolver
+  FilesetResolver 
 } from '@mediapipe/tasks-vision';
 
-const MediaPipeFace = ({ msg }) => {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const pictureRef = useRef(null);
-  const faceDetector = useRef(null);
-  const faceLandmarker = useRef(null);
-  // const [faceDetector, setFaceDetector] = useState(null);
-  // const [faceLandmarker, setFaceLandmarker] = useState(null);
+import styles from "./styles/FaceDetection.module.scss"
+
+const MediaPipeFace= ({ msg }: typeFaceDetector) => {
+  const videoRef = useRef<any>(null);
+  const canvasRef = useRef<any>(null);
+  const pictureRef = useRef<any>(null);
+  const faceDetector = useRef<any>(null);
+  const faceLandmarker = useRef<any>(null);
   const [base64Image, setBase64Image] = useState('');
-  const [isCenterFace, setIsCenterFace] = useState(false);
+  const isCenterFace = useRef<Boolean>(false);
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [timeCounter, setTimeCounter] = useState(5);
+  const timeCounter = useRef<number>(5);
   const [intervalId, setIntervalId] = useState(null);
-  const animationIdRef = useRef(null);
-  const [faceBox, setFaceBox] = useState(null);
-  const runningMode = 'VIDEO';
+  const animationIdRef = useRef<any>(null);
+  const faceBox = useRef<any>(null);
+  const runningMode = useRef<any>('VIDEO');
   const minZ = -0.1;
   const maxZ = -0.07;
 
@@ -52,7 +53,7 @@ const MediaPipeFace = ({ msg }) => {
       },
       minDetectionConfidence: 0.5,
       minSuppressionThreshold: 0.5,
-      runningMode
+      runningMode: runningMode.current
     });
 
     const landmarker = await FaceLandmarker.createFromOptions(vision, {
@@ -62,12 +63,10 @@ const MediaPipeFace = ({ msg }) => {
       },
       outputFaceBlendshapes: true,
       numFaces: 1,
-      runningMode
+      runningMode: runningMode.current
     });
     faceDetector.current = detector;
     faceLandmarker.current = landmarker;
-    // setFaceDetector(detector);
-    // setFaceLandmarker(landmarker);
 
     startCamera();
   };
@@ -75,8 +74,12 @@ const MediaPipeFace = ({ msg }) => {
   const startCamera = () => {
     if (intervalId) return;
 
-    const interval = setInterval(() => {
-      setTimeCounter((prev) => (isCenterFace ? (prev > 1 ? prev - 1 : 5) : 5));
+    const interval: any = setInterval(() => {
+      timeCounter.current = isCenterFace.current
+          ? timeCounter.current > 1
+            ? timeCounter.current - 1
+            : (captureFace(), 5)
+          : 5
     }, 1000);
     setIntervalId(interval);
 
@@ -103,16 +106,13 @@ const MediaPipeFace = ({ msg }) => {
   };
 
   const predictWebcam = async () => {
-    console.log('faceDetector: ', faceDetector);
-    console.log('faceLandmarker: ', faceLandmarker);
+    if (!faceDetector.current || !faceLandmarker.current) return;
 
-    if (!faceDetector || !faceLandmarker) return;
-
-    if (faceDetector.runningMode !== 'VIDEO') {
+    if (faceDetector.current.runningMode !== 'VIDEO') {
       faceDetector.current.setOptions({ runningMode: 'VIDEO' });
     }
 
-    if (faceLandmarker.runningMode !== 'VIDEO') {
+    if (faceLandmarker.current.runningMode !== 'VIDEO') {
       faceLandmarker.current.setOptions({ runningMode: 'VIDEO' });
     }
 
@@ -134,7 +134,7 @@ const MediaPipeFace = ({ msg }) => {
     }
   };
 
-  const displayVideoDetections = (detectorResults, landmarkerResults) => {
+  const displayVideoDetections = (detectorResults: any[], landmarkerResults: any[]) => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     if (!canvas || !video) return;
@@ -172,6 +172,13 @@ const MediaPipeFace = ({ msg }) => {
     for (const detection of detectorResults) {
       const score = Math.round(parseFloat(detection.categories[0].score) * 100);
       const box = detection.boundingBox;
+
+      faceBox.current = {
+        x: Math.max(box.originX),
+        y: Math.max(box.originY),
+        width: Math.min(box.width),
+        height: Math.min(box.height)
+      };
       const positionBoxOval = {
         x: box.originX,
         y: box.originY,
@@ -236,9 +243,7 @@ const MediaPipeFace = ({ msg }) => {
       const centerFace =
         isInOval && !distanceWarning && score >= 85 && !messageRotation;
 
-      console.log('centerFace: ', centerFace);
-
-      setIsCenterFace(centerFace);
+      isCenterFace.current = centerFace;
 
       ctx.beginPath();
       ctx.ellipse(
@@ -271,7 +276,7 @@ const MediaPipeFace = ({ msg }) => {
         ctx.fillStyle = gradient;
         ctx.fillText(message, canvasCenterX, 15);
         ctx.font = '30px Arial';
-        ctx.fillText(timeCounter.toString(), canvasCenterX, canvasCenterY);
+        ctx.fillText(timeCounter.current.toString(), canvasCenterX, canvasCenterY);
       } else if (distanceWarning) {
         ctx.fillStyle = 'white';
         ctx.fillText(messageDistance, canvasCenterX, 15);
@@ -288,7 +293,7 @@ const MediaPipeFace = ({ msg }) => {
   };
 
 
-  const detectHeadDirection = (landmarks) => {
+  const detectHeadDirection = (landmarks: any[]) => {
     const nose = landmarks[1];
     const leftEye = landmarks[33];
     const rightEye = landmarks[263];
@@ -301,11 +306,58 @@ const MediaPipeFace = ({ msg }) => {
     return 'Centro';
   };
 
+  const captureFace = () => {
+      const canvas = pictureRef.current;
+      const context = canvas.getContext('2d');
+      const video = videoRef.current;
+      const { height, width, x, y } = faceBox.current;
+      const { videoWidth, videoHeight } = video;
+
+      // Configurar las dimensiones del canvas recortado
+      const topOffset = height * 0.6; // 60% extra en la parte superior
+      const bottomOffset = height * 0.3; // 30% extra en la parte inferior
+      const sideOffset = width * 0.2; // 20% extra a los lados
+
+      let adjustedX = Math.max(0, x - sideOffset);
+      let adjustedY = Math.max(0, y - topOffset);
+      let adjustedWidth = width + sideOffset * 2;
+      let adjustedHeight = height + topOffset + bottomOffset;
+
+      // Asegurar que los valores no excedan los límites del video
+      if (adjustedX + adjustedWidth > videoWidth) {
+        adjustedWidth = videoWidth - adjustedX;
+      }
+      if (adjustedY + adjustedHeight > videoHeight) {
+        adjustedHeight = videoHeight - adjustedY;
+      }
+
+      // Establecer el tamaño del canvas
+      canvas.width = adjustedWidth;
+      canvas.height = adjustedHeight;
+      context.imageSmoothingEnabled = true;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Dibujar la imagen en el canvas
+      context.drawImage(
+        video,
+        adjustedX, adjustedY, adjustedWidth, adjustedHeight, // Origen
+        0, 0, canvas.width, canvas.height // Destino
+      );
+
+      setBase64Image(canvas.toDataURL('image/jpeg', 0.99))
+      console.log('CraeteJpegFace');
+
+      // const link = document.createElement('a');
+      // link.href = base64Image;
+      // link.download = 'rostro.jpg';
+      // link.click();
+    }
+
   return (
     <div>
       <video ref={videoRef} autoPlay width="640" height="480" />
       <canvas ref={canvasRef} />
-      <canvas ref={pictureRef} style={{ display: 'none' }} />
+      <canvas ref={pictureRef} className={base64Image === '' ? styles.hidden : ''} />
       <button onClick={initializeFaceDetector}>Iniciar Detector</button>
       <p>{msg}</p>
     </div>
