@@ -1,6 +1,6 @@
 import StatCard from './StatCard';
 import ChartSection from './ChartSection';
-import Users from '../../Modules/Users'
+import Users from '../../Modules/Users/Users'
 
 
 export default function Dashboard() {
