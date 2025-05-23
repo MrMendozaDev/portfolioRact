@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState, FC } from "react";
-import { typeFaceDetector } from "./types/faceDetector";
+import { typeFaceDetector } from "./Types/faceDetector";
 import {
   FaceDetector,
   FaceLandmarker,
   FilesetResolver,
 } from "@mediapipe/tasks-vision";
 
-import styles from "./styles/FaceDetection.module.scss";
+import styles from "./Styles/FaceDetection.module.scss";
 
 const MediaPipeFace = ({ msg }: typeFaceDetector) => {
   const videoRef = useRef<any>(null);

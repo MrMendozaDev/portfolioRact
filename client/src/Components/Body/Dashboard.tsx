@@ -1,7 +1,10 @@
-import StatCard from '../Body/StatCard';
-import ChartSection from '../Body/ChartSection';
+import StatCard from './StatCard';
+import ChartSection from './ChartSection';
+import Users from '../../Modules/Users'
+
 
 export default function Dashboard() {
+  
   return (
     <div className="flex-1 p-6 bg-gray-100">
       <div className="grid grid-cols-5 gap-4 mb-6">
@@ -12,6 +15,7 @@ export default function Dashboard() {
         {/* Add more if needed */}
       </div>
       <ChartSection />
+      <Users />
     </div>
   );
 }
