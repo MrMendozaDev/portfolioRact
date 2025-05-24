@@ -1,18 +1,19 @@
 
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from './Store/Stores'
-import { increment, decrement } from './Store/Actions'
+import { RootState, AppDispatch } from './Store/Stores'
+import { fetchUsers } from './Store/Actions'
 
 const SetUsers = () => {
-    const user = useSelector((state: RootState) => state.user.value)
-    const dispatch = useDispatch();
+    const users = useSelector((state: RootState) => state.user.users)
+    const dispatch = useDispatch<AppDispatch>();
     return (
-        <div>
-            <h2>Count: {user}</h2>
-            <button onClick={() => dispatch(increment())}>+</button>
-            <button onClick={() => dispatch(decrement())}>-</button>
-        </div>
-    )
+    <div>
+      {users.map((user, index) => (
+        <h2 key={index}>Usuario: {user.name}</h2> // Ajusta según el campo que tenga el user
+      ))}
+      <button onClick={() => dispatch(fetchUsers())}>Cargar Usuarios</button>
+    </div>
+  )
 }
 
 export default SetUsers
