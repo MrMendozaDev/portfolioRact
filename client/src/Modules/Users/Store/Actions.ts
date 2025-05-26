@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { initialState } from "./MutationTypes"
 import { AppDispatch } from './Stores'
-import api from '@/Services/Api'
-// import api from '../../../Services/Api'
-
+import api from "Services/Api"
 
 const userSlice = createSlice({
   name: 'users',
@@ -27,10 +25,10 @@ const userSlice = createSlice({
 export const fetchUsers = () => async (dispatch: AppDispatch) => {
   try {
     
-    console.log('apiLibrary: ', api);
-    const res = await api.get('/api/users')
-    dispatch(setUsers(res.data))
-    return res.data
+    const { status, data } = await api.get('/api/users')
+    if (status !== 200) throw new Error;
+    dispatch(setUsers(data))
+    return data
   } catch (err: any) {
     dispatch(setError(err.message))
   }

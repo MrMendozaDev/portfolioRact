@@ -5,6 +5,7 @@ import { fetchUsers } from './Store/Actions'
 
 const SetUsers = () => {
     const users = useSelector((state: RootState) => state.user.users)
+
     const dispatch = useDispatch<AppDispatch>();
     return (
     <div>

@@ -1,24 +1,28 @@
-import { Home, BarChart, Calendar, FileText, User, HelpCircle, Settings } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { Home, BarChart } from 'lucide-react';
 
 const menu = [
-  { icon: <Home size={20} />, label: 'Overview' },
-  { icon: <BarChart size={20} />, label: 'Analytics' },
-  { icon: <Calendar size={20} />, label: 'Post Schedule' },
-  { icon: <FileText size={20} />, label: 'Report' },
-  { icon: <User size={20} />, label: 'Account' },
-  { icon: <HelpCircle size={20} />, label: 'Support' },
-  { icon: <Settings size={20} />, label: 'Setting' },
+  { icon: <Home size={20} />, label: 'Home', path: '/' },
+  { icon: <BarChart size={20} />, label: 'FaceDetection', path: '/face-detection' },
 ];
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 bg-[#111827] text-white h-screen p-6">
-      <nav className="flex flex-col gap-4">
-        {menu.map(({ icon, label }) => (
-          <button key={label} className="flex items-center gap-3 text-sm hover:text-gray-300">
+    <aside className="w-64 bg-[#111827] text-white p-6">
+      <nav className="flex flex-row">
+        {menu.map(({ icon, label, path }) => (
+          <NavLink
+            key={label}
+            to={path}
+            className={({ isActive }) =>
+              `flex items-center gap-3 text-sm px-3 py-2 rounded-md transition-colors ${
+                isActive ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'
+              }`
+            }
+          >
             {icon}
             {label}
-          </button>
+          </NavLink>
         ))}
       </nav>
     </aside>
