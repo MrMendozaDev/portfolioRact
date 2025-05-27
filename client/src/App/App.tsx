@@ -14,8 +14,8 @@ function App() {
         <div className="App">
           <header className="App-header">
             <Sidebar />
-            <AppRoutes />
           </header>
+          <AppRoutes />
         </div>
       </BrowserRouter>
     </Provider>

@@ -8,7 +8,7 @@ const menu = [
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 bg-[#111827] text-white p-6">
+    <aside className="w-full bg-[#111827] text-white p-6">
       <nav className="flex flex-row">
         {menu.map(({ icon, label, path }) => (
           <NavLink
