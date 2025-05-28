@@ -108,6 +108,10 @@ module.exports = {
     {
       pattern: /opacity-(0|25|50|75|100)/,
     },
+     // === Justify ===
+    {
+      pattern: /(sm|md|lg|xl|2xl)?:justify-(start|end|center|between|around|evenly)/,
+    }
   ],
   theme: {
     extend: {},

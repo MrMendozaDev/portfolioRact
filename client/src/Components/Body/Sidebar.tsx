@@ -8,20 +8,22 @@ const menu = [
 
 export default function Sidebar() {
   return (
-    <aside className="w-full bg-[#111827] text-white p-6">
-      <nav className="flex flex-row">
+    <aside className="sm:hidden w-full md:w-64 bg-[#111827] text-white p-4">
+      <nav className="flex flex-row items-center justify-end gap-2">
         {menu.map(({ icon, label, path }) => (
           <NavLink
             key={label}
             to={path}
             className={({ isActive }) =>
               `flex items-center gap-3 text-sm px-3 py-2 rounded-md transition-colors ${
-                isActive ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                isActive
+                  ? 'bg-gray-700 text-white'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
               }`
             }
           >
             {icon}
-            {label}
+            <span className="hidden md:inline">{label}</span>
           </NavLink>
         ))}
       </nav>

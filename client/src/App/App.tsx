@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./App.scss";
 import Sidebar from "../Components/Body/Sidebar";
+import SidebarMobile from "../Components/Body/SidebarMobile";
 import AppRoutes from "Routes/AppRoutes";
 
 function App() {
@@ -13,9 +14,16 @@ function App() {
       <BrowserRouter>
         <div className="App">
           <header className="App-header">
-            <Sidebar />
+            <div className="flex">
+              <SidebarMobile />
+              <div className="flex-1">
+                <Sidebar />
+              </div>
+            </div>
           </header>
-          <AppRoutes />
+          <section>
+            <AppRoutes />
+          </section>
         </div>
       </BrowserRouter>
     </Provider>
