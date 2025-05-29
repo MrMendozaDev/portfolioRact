@@ -1,12 +1,16 @@
 import { NavLink } from 'react-router-dom';
 import { Home, BarChart } from 'lucide-react';
+import { useConfig } from 'Context/ConfigContext'
 
 const menu = [
   { icon: <Home size={20} />, label: 'Home', path: '/' },
   { icon: <BarChart size={20} />, label: 'FaceDetection', path: '/face-detection' },
 ];
 
-export default function Sidebar() {
+export const Sidebar = () => {
+  const config = useConfig();
+  console.log('getConfig: ', config);
+  
   return (
     <aside className="sm:hidden w-full md:w-64 bg-[#111827] text-white p-4">
       <nav className="flex flex-row items-center justify-end gap-2">
