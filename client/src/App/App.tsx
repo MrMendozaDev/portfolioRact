@@ -17,12 +17,10 @@ export const App = () => {
       <ConfigProvider config={getConfig()}>
         <BrowserRouter>
           <div className="App">
-            <header className="App-header">
-              <div className="flex">
+            <header className="bg-[#111827] App-header">
+              <div className="w-full">
                 <SidebarMobile />
-                <div className="flex-1">
-                  <Sidebar />
-                </div>
+                <Sidebar />
               </div>
             </header>
             <section>

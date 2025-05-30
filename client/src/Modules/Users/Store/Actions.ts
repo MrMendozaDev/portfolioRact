@@ -34,5 +34,17 @@ export const fetchUsers = () => async (dispatch: AppDispatch) => {
   }
 }
 
+export const fetchMenusByUsers = () => async (dispatch: AppDispatch) => {
+  try {
+    
+    const { status, data } = await api.get('/api/users')
+    if (status !== 200) throw new Error;
+    dispatch(setUsers(data))
+    return data
+  } catch (err: any) {
+    dispatch(setError(err.message))
+  }
+}
+
 export const { setLoading, setUsers, setError } = userSlice.actions
 export default userSlice.reducer
