@@ -1,14 +1,13 @@
-import React from "react";
 import { Provider } from "react-redux";
 import { store } from "../Modules/Users/Store/Stores";
 import { BrowserRouter } from "react-router-dom";
-
-import "./App.scss";
-import { Sidebar } from "../Components/Body/Sidebar";
-import SidebarMobile from "../Components/Body/SidebarMobile";
-import AppRoutes from "Routes/AppRoutes";
 import { ConfigProvider } from 'Context/ConfigContext';
 import { loadConfig, getConfig } from "Config/index"
+import { Sidebar } from "../Components/Body/Sidebar";
+
+import "./App.scss";
+import SidebarMobile from "../Components/Body/SidebarMobile";
+import AppRoutes from "Routes/AppRoutes";
 
 export const App = () => {
   loadConfig();
